@@ -612,19 +612,19 @@
         <h2 class="section-title">Play the ultimate hearing test with <br>plurallistic controls</h2>
         <div class="feature-grid">
             <div class="feature-card">
-                <img src="bio.jpg" alt="Ikon analisis biomedis" class="feature-icon">
+                <img src="bio.jpg.jpg" alt="Ikon analisis biomedis" class="feature-icon">
                 <h3 class="feature-title">Biomedical analysis</h3>
                 <p class="feature-desc">Advanced algorithms analyze your unique hearing profile to deliver personalized neural stimulation.</p>
             </div>
 
             <div class="feature-card">
-                <img src="brain.jpeg" alt="Ikon monitoring EEG" class="feature-icon">
+                <img src="brain.jpeg.jpg" alt="Ikon monitoring EEG" class="feature-icon">
                 <h3 class="feature-title">In-base EEG analysis</h3>
                 <p class="feature-desc">Real-time brainwave monitoring ensures optimal stimulation patterns for your brain.</p>
             </div>
 
             <div class="feature-card">
-                <img src="ai.jpg" alt="Ikon adaptasi AI" class="feature-icon">
+                <img src="ai.jpg.jpg" alt="Ikon adaptasi AI" class="feature-icon">
                 <h3 class="feature-title">Supervised learning</h3>
                 <p class="feature-desc">AI-powered adaptation that learns from your preferences to continuously improve your experience.</p>
             </div>
