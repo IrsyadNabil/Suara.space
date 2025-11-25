@@ -6,6 +6,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     
+    if (!empty($email) && !empty($password)) {
+        $_SESSION['user_email'] = $email;
+        $_SESSION['user_name'] = explode('@', $email)[0];
+        $_SESSION['logged_in'] = true;
+        
+        header('Location: menu_lagu.php');
+        exit();
+    } else {
+        $error = "Email dan password harus diisi";
+    }
+
     $sql = "SELECT * FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);

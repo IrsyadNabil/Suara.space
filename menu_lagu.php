@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+// Cek apakah user sudah login
+if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
+    header('Location: sign_in.php');
+    exit();
+}
+
+$user_name = $_SESSION['user_name'] ?? 'User';
+$user_email = $_SESSION['user_email'] ?? '';
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 

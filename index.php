@@ -1,3 +1,9 @@
+<?php
+session_start();
+$is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
+$user_name = $_SESSION['user_name'] ?? '';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,8 +29,6 @@
             min-height: 100vh;
             background: linear-gradient(#000000 100%);
         }
-
-    
 
         /* Header Navigation - UPDATED */
         .header {
@@ -103,6 +107,26 @@
             height: 2px;
             background: linear-gradient(90deg, #a855f7, #6366f1);
             animation: slideIn 0.3s ease;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
         }
 
         @keyframes slideIn {
@@ -459,24 +483,36 @@
 
         <!-- NAVBAR UPDATED -->
         <header class="header">
-            <a href="index.html" class="logo">
+            <a href="index.php" class="logo">
                 <div class="logo-icon">S</div>
                 Suara.Space
             </a>
             <nav class="nav-links" id="navLinks">
-                <a href="index.html" class="active">Home</a>
+                <a href="index.php" class="active">Home</a>
                 <a href="science.php">Our Science</a>
                 <a href="about_us.php">About Us</a>
             </nav>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-            <a href="sign_in.php" class="btn-app">SIGN IN</a>
+            
+            <?php if ($is_logged_in): ?>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <?php echo strtoupper(substr($user_name, 0, 1)); ?>
+                    </div>
+                    <span>Hi, <?php echo htmlspecialchars($user_name); ?></span>
+                </div>
+                <a href="menu_lagu.php" class="btn-app">OPEN APP</a>
+            <?php else: ?>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+                <a href="sign_in.php" class="btn-app">SIGN IN</a>
+            <?php endif; ?>
         </header>
 
         <div class="hero">
             <div class="hero-content">
                 <h1>Music made for <span class="highlight"><span class="text-rotate" id="rotatingText">Creativity</span></span></h1>
                 <p>The only music app made with modes for different activities in your life.</p>
-                <a href="sign_up.php" class="cta-btn">
+                <!-- UBAH LINK INI -->
+                <a href="<?php echo $is_logged_in ? 'menu_lagu.php' : 'sign_up.php'; ?>" class="cta-btn">
                     try Suara.Space now
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                         <path d="M5 12h14M12 5l7 7-7 7" />
