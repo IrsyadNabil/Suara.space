@@ -344,7 +344,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="header">
-        <a href="index.html" class="logo">
+        <a href="index.php" class="logo">
             <div class="logo-icon">S</div>
             Suara.Space
         </a>

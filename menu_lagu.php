@@ -1226,7 +1226,7 @@ $user_email = $_SESSION['user_email'] ?? '';
     <!-- Audio element untuk memutar lagu -->
     <audio id="audioPlayer" preload="auto"></audio>
 
-    <div class="logo" onclick="location.href='index.html'">S</div>
+    <div class="logo" onclick="location.href='index.php'">S</div>
 
     <button id="toggleButton" class="top-right-button" aria-label="Toggle Library Menu">
         ☰ Menu

@@ -543,12 +543,12 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <a href="index.html" class="logo">
+        <a href="index.php" class="logo">
             <div class="logo-icon">S</div>
             Suara.Space
         </a>
         <nav class="nav-links">
-            <a href="index.html">Home</a>
+            <a href="index.php">Home</a>
             <a href="science.php">Our Science</a>
             <a href="about_us.php" class="active">About Us</a>
         </nav>
