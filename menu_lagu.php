@@ -9,6 +9,116 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 
 $user_name = $_SESSION['user_name'] ?? 'User';
 $user_email = $_SESSION['user_email'] ?? '';
+$user_id = $_SESSION['user_id'] ?? '';
+
+// Koneksi database (sesuaikan dengan konfigurasi Anda)
+$host = 'localhost';
+$dbname = 'music_therapy';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Koneksi database gagal: " . $e->getMessage());
+}
+
+// Fungsi untuk mendapatkan data user
+function getUserData($pdo, $user_id)
+{
+    $stmt = $pdo->prepare("SELECT name, email FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+// Fungsi untuk update profile
+function updateProfile($pdo, $user_id, $name, $email)
+{
+    $stmt = $pdo->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
+    return $stmt->execute([$name, $email, $user_id]);
+}
+
+// Fungsi untuk ganti password
+function changePassword($pdo, $user_id, $current_password, $new_password)
+{
+    // Verifikasi password saat ini
+    $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user || !password_verify($current_password, $user['password'])) {
+        return false; // Password saat ini salah
+    }
+
+    // Update password baru
+    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+    $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
+    return $stmt->execute([$hashed_password, $user_id]);
+}
+
+// Fungsi untuk menghapus akun
+function deleteAccount($pdo, $user_id)
+{
+    $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+    return $stmt->execute([$user_id]);
+}
+
+// Handle form submissions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['action'])) {
+        switch ($_POST['action']) {
+            case 'update_profile':
+                $name = $_POST['name'];
+                $email = $_POST['email'];
+
+                if (updateProfile($pdo, $user_id, $name, $email)) {
+                    $_SESSION['user_name'] = $name;
+                    $_SESSION['user_email'] = $email;
+                    echo json_encode(['success' => true, 'message' => 'Profile berhasil diperbarui']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Gagal memperbarui profile']);
+                }
+                exit;
+
+            case 'change_password':
+                $current_password = $_POST['current_password'];
+                $new_password = $_POST['new_password'];
+                $confirm_password = $_POST['confirm_password'];
+
+                if ($new_password !== $confirm_password) {
+                    echo json_encode(['success' => false, 'message' => 'Password baru tidak cocok']);
+                    exit;
+                }
+
+                if (strlen($new_password) < 6) {
+                    echo json_encode(['success' => false, 'message' => 'Password minimal 6 karakter']);
+                    exit;
+                }
+
+                if (changePassword($pdo, $user_id, $current_password, $new_password)) {
+                    echo json_encode(['success' => true, 'message' => 'Password berhasil diubah']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Password saat ini salah']);
+                }
+                exit;
+
+            case 'delete_account':
+                if (deleteAccount($pdo, $user_id)) {
+                    session_destroy();
+                    echo json_encode(['success' => true, 'message' => 'Akun berhasil dihapus']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Gagal menghapus akun']);
+                }
+                exit;
+        }
+    }
+}
+
+// Ambil data user terbaru
+$user_data = getUserData($pdo, $user_id);
+$user_name = $user_data['name'] ?? $user_name;
+$user_email = $user_data['email'] ?? $user_email;
 ?>
 
 <!DOCTYPE html>
@@ -211,7 +321,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             transition: all 0.25s ease;
             user-select: none;
             box-shadow: 0 10px 40px rgb(0 0 0 / 0.4);
-            margin : 20px;
+            margin: 20px;
         }
 
         .category-card:hover,
@@ -596,15 +706,17 @@ $user_email = $_SESSION['user_email'] ?? '';
         .app-page {
             display: flex;
             flex-direction: column;
-            position: absolute; /* Stack them */
+            position: absolute;
+            /* Stack them */
             top: 0;
             left: 0;
             width: 100%;
             min-height: 100vh;
             /* Tambahkan padding di atas untuk logo dan tombol */
-            padding-top: 88px; 
+            padding-top: 88px;
             padding-bottom: 20px;
-            background: #0a0a0a; /* Background untuk menutupi main content */
+            background: #0a0a0a;
+            /* Background untuk menutupi main content */
             transition: opacity 0.3s ease;
             z-index: 100;
         }
@@ -615,23 +727,24 @@ $user_email = $_SESSION['user_email'] ?? '';
             z-index: 0;
             pointer-events: none;
         }
-        
+
         .app-page:not(.hidden-page) {
             display: flex;
             opacity: 1;
             z-index: 200;
             pointer-events: auto;
         }
-        
+
         /* HEADER KEMBALI: Kini mengisi lebar penuh dan memusatkan tombol */
         .app-header-back {
             background: #0a0a0a;
             padding: 10px 30px 0;
             width: 100%;
-            max-width: 960px; /* Lebar maksimum seperti content utama */
+            max-width: 960px;
+            /* Lebar maksimum seperti content utama */
             margin: 0 auto;
         }
-        
+
         .back-to-home-btn {
             background: none;
             border: 1px solid #1a1a1a;
@@ -646,7 +759,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             gap: 8px;
             margin-bottom: 16px;
         }
-        
+
         .back-to-home-btn:hover {
             color: #fff;
             background: #1a1a1a;
@@ -655,19 +768,21 @@ $user_email = $_SESSION['user_email'] ?? '';
         /* CONTAINER APLIKASI: Mengisi lebar penuh dengan max-width untuk centering */
         .app-container {
             /* MENGHAPUS max-width: 400px UNTUK FULL LANDSCAPE */
-            max-width: 960px; /* Batasan maksimum yang lebih lebar */
+            max-width: 960px;
+            /* Batasan maksimum yang lebih lebar */
             margin: 0 auto;
             width: 100%;
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 0 30px; /* Padding samping untuk tampilan lebar */
+            padding: 0 30px;
+            /* Padding samping untuk tampilan lebar */
         }
-        
+
         /* LIBRARY & EXPLORE CSS (Penyesuaian Padding) */
         .lib-exp-header {
             /* Menghilangkan padding horizontal karena sudah di handle .app-container */
-            padding: 0 0 20px; 
+            padding: 0 0 20px;
             border-bottom: 1px solid #1a1a1a;
         }
 
@@ -713,7 +828,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             display: flex;
             gap: 12px;
             /* Menghilangkan padding horizontal */
-            padding: 20px 0; 
+            padding: 20px 0;
             overflow-x: auto;
             scrollbar-width: none;
         }
@@ -820,7 +935,7 @@ $user_email = $_SESSION['user_email'] ?? '';
         .icon-btn:hover {
             color: #fff;
         }
-        
+
         /* Explore Specific CSS */
         .search-box {
             position: relative;
@@ -848,7 +963,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             transform: translateY(-50%);
             color: #666;
         }
-        
+
         .section {
             margin-bottom: 24px;
         }
@@ -1117,108 +1232,112 @@ $user_email = $_SESSION['user_email'] ?? '';
         }
 
         /* Tambahkan style untuk background images */
-.get-started-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0 15px 80px;
-    text-align: center;
-    max-width: 960px;
-    margin: auto;
-    gap: 40px;
-    position: relative;
-    z-index: 100;
-    min-height: 100vh;
-}
+        .get-started-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px 80px;
+            text-align: center;
+            max-width: 960px;
+            margin: auto;
+            gap: 40px;
+            position: relative;
+            z-index: 100;
+            min-height: 100vh;
+        }
 
-/* Background default untuk get-started page */
-.get-started-page::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, #140f2b 0%, #1a153d 60%, #0f1438 100%);
-    z-index: -1;
-}
+        /* Background default untuk get-started page */
+        .get-started-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #140f2b 0%, #1a153d 60%, #0f1438 100%);
+            z-index: -1;
+        }
 
-/* Background images untuk setiap kategori */
-.player-page.focus-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('images/focus-bg.jpg'); /* Ganti dengan path gambar focus Anda */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -2;
-}
+        /* Background images untuk setiap kategori */
+        .player-page.focus-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/focus-bg.jpg');
+            /* Ganti dengan path gambar focus Anda */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+        }
 
-.player-page.relax-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('images/relax-bg.jpg'); /* Ganti dengan path gambar relax Anda */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -2;
-}
+        .player-page.relax-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/relax-bg.jpg');
+            /* Ganti dengan path gambar relax Anda */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+        }
 
-.player-page.sleep-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('images/sleep-bg.jpg'); /* Ganti dengan path gambar sleep Anda */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -2;
-}
+        .player-page.sleep-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/sleep-bg.jpg');
+            /* Ganti dengan path gambar sleep Anda */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+        }
 
-.player-page.meditate-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('images/meditate-bg.jpg'); /* Ganti dengan path gambar meditate Anda */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -2;
-}
+        .player-page.meditate-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/meditate-bg.jpg');
+            /* Ganti dengan path gambar meditate Anda */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+        }
 
-/* Overlay gelap untuk meningkatkan keterbacaan teks */
-.player-page::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(10, 10, 20, 0.7); /* Overlay gelap */
-    z-index: -1;
-}
+        /* Overlay gelap untuk meningkatkan keterbacaan teks */
+        .player-page::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 20, 0.7);
+            /* Overlay gelap */
+            z-index: -1;
+        }
 
-/* Pastikan konten tetap terlihat jelas */
-.player-page {
-    position: relative;
-    z-index: 10;
-}
-
+        /* Pastikan konten tetap terlihat jelas */
+        .player-page {
+            position: relative;
+            z-index: 10;
+        }
     </style>
 </head>
 
@@ -1288,7 +1407,7 @@ $user_email = $_SESSION['user_email'] ?? '';
                     <option value="Sleep">Sleep</option>
                     <option value="Meditate">Meditate</option>
                 </select>
-                
+
             </header>
 
             <div class="player-container">
@@ -1491,7 +1610,7 @@ $user_email = $_SESSION['user_email'] ?? '';
                 <div class="app-container">
                     <div class="profile-header">
                         <h1>Profile</h1>
-                        <button class="logout-btn">Logout</button>
+                        <button class="logout-btn" onclick="location.href='logout.php'">Logout</button>
                     </div>
 
                     <div class="app-content">
@@ -1540,7 +1659,7 @@ $user_email = $_SESSION['user_email'] ?? '';
                 </div>
             </div>
         </div>
-        </div>
+    </div>
     <div id="sidebar" class="sidebar">
         <h2>Menu</h2>
         <a href="javascript:void(0)" onclick="showPage('library')">Library Anda</a>
@@ -1549,66 +1668,96 @@ $user_email = $_SESSION['user_email'] ?? '';
         <a href="logout.php">Logout</a>
     </div>
 
+    <!-- Modal Edit Profile -->
     <div class="modal-overlay" id="editModal">
         <div class="modal">
             <button class="modal-close" onclick="closeEditModal()">✕</button>
             <h2 class="modal-title">Edit Profile</h2>
 
-            <div class="form-group">
-                <label class="form-label">Name</label>
-                <input type="text" class="form-input" value="musang">
-            </div>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-input" name="name" value="<?php echo htmlspecialchars($user_name); ?>" required>
+                </div>
 
-            <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-input" value="vpmusang2025@gmail.com">
-            </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" name="email" value="<?php echo htmlspecialchars($user_email); ?>" required>
+                </div>
 
-            <button class="delete-btn">Delete My Account</button>
+                <input type="hidden" name="action" value="update_profile">
 
-            <button class="modal-btn btn-primary">SAVE</button>
-            <button class="modal-btn btn-secondary" onclick="closeEditModal()">CANCEL</button>
+                <button type="button" class="delete-btn" onclick="confirmDeleteAccount()">Delete My Account</button>
+
+                <button type="submit" class="modal-btn btn-primary">SAVE</button>
+                <button type="button" class="modal-btn btn-secondary" onclick="closeEditModal()">CANCEL</button>
+            </form>
         </div>
     </div>
 
+    <!-- Modal Ganti Password -->
     <div class="modal-overlay" id="passwordModal">
         <div class="modal">
             <button class="modal-close" onclick="closePasswordModal()">✕</button>
             <h2 class="modal-title">Change Password</h2>
 
-            <div class="form-group">
-                <label class="form-label">CURRENT PASSWORD</label>
-                <div class="password-input-wrapper">
-                    <input type="password" class="form-input" placeholder="Enter current password" id="currentPass">
-                    <button type="button" class="password-toggle" onclick="togglePassword('currentPass')">
-                        <span>👁</span>
-                    </button>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label class="form-label">CURRENT PASSWORD</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" class="form-input" name="current_password" placeholder="Enter current password" id="currentPass" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('currentPass')">
+                            <span>👁</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="form-label">NEW PASSWORD</label>
-                <div class="password-input-wrapper">
-                    <input type="password" class="form-input" placeholder="New password" id="newPass">
-                    <button type="button" class="password-toggle" onclick="togglePassword('newPass')">
-                        <span>👁</span>
-                    </button>
+                <div class="form-group">
+                    <label class="form-label">NEW PASSWORD</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" class="form-input" name="new_password" placeholder="New password" id="newPass" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('newPass')">
+                            <span>👁</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="password-input-wrapper">
-                    <input type="password" class="form-input" placeholder="Confirm new password" id="confirmPass">
-                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPass')">
-                        <span>👁</span>
-                    </button>
+                <div class="form-group">
+                    <div class="password-input-wrapper">
+                        <input type="password" class="form-input" name="confirm_password" placeholder="Confirm new password" id="confirmPass" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPass')">
+                            <span>👁</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <button class="modal-btn btn-primary">SAVE</button>
-            <button class="modal-btn btn-secondary" onclick="closePasswordModal()">CANCEL</button>
+                <input type="hidden" name="action" value="change_password">
+
+                <button type="submit" class="modal-btn btn-primary">SAVE</button>
+                <button type="button" class="modal-btn btn-secondary" onclick="closePasswordModal()">CANCEL</button>
+            </form>
         </div>
     </div>
+
+    <!-- Modal Konfirmasi Hapus Akun -->
+    <div class="modal-overlay" id="deleteConfirmModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+            <h2 class="modal-title">Delete Account</h2>
+
+            <p style="text-align: center; margin-bottom: 20px; color: #ff6b6b;">
+                Apakah Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan.
+            </p>
+
+            <form id="deleteAccountForm">
+                <input type="hidden" name="action" value="delete_account">
+
+                <button type="submit" class="delete-btn" style="background: #ff4444; color: white;">YA, HAPUS AKUN SAYA</button>
+                <button type="button" class="modal-btn btn-secondary" onclick="closeDeleteModal()">BATAL</button>
+            </form>
+        </div>
+    </div>
+
 
 
     <script>
@@ -1624,7 +1773,7 @@ $user_email = $_SESSION['user_email'] ?? '';
         document.documentElement.style.setProperty('--sidebar-width', SIDEBAR_WIDTH);
 
         // Tambahkan Event Listener ke tombol Sidebar
-        toggleButton.addEventListener('click', function () {
+        toggleButton.addEventListener('click', function() {
             // Ketika tombol diklik, hanya tambahkan/hapus kelas 'active'
             sidebar.classList.toggle('active');
             mainContainer.classList.toggle('active');
@@ -1672,12 +1821,12 @@ $user_email = $_SESSION['user_email'] ?? '';
             document.querySelectorAll('.app-page').forEach(page => {
                 page.classList.add('hidden-page');
             });
-            
+
             // Tutup sidebar jika terbuka
             sidebar.classList.remove('active');
             mainContainer.classList.remove('active');
             toggleButton.classList.remove('active');
-            
+
             // Hentikan musik/timer jika sedang berjalan
             stopTimer();
             isPlaying = false;
@@ -1697,8 +1846,7 @@ $user_email = $_SESSION['user_email'] ?? '';
 
         // Data lagu yang telah dimodifikasi
         const tracks = {
-            Focus: [
-                {
+            Focus: [{
                     title: 'Herbarium.mp3',
                     color: '#ff6b9d',
                     category: 'High Neural Effect',
@@ -1720,8 +1868,7 @@ $user_email = $_SESSION['user_email'] ?? '';
                     file: 'Now is enough.mp3'
                 },
             ],
-            Relax: [
-                {
+            Relax: [{
                     title: 'Multo.mp3',
                     color: '#4facfe',
                     category: 'Serene Vibes',
@@ -1743,8 +1890,7 @@ $user_email = $_SESSION['user_email'] ?? '';
                     file: 'Now is enough.mp3'
                 },
             ],
-            Sleep: [
-                {
+            Sleep: [{
                     title: 'Herbarium.mp3',
                     color: '#667eea',
                     category: 'Night Calm',
@@ -1766,8 +1912,7 @@ $user_email = $_SESSION['user_email'] ?? '';
                     file: 'Beautiful.mp3'
                 },
             ],
-            Meditate: [
-                {
+            Meditate: [{
                     title: 'Now is enough.mp3',
                     color: '#00c9ff',
                     category: 'Zen Atmosphere',
@@ -1823,7 +1968,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             seconds = 0;
             document.getElementById('getStartedPage').style.display = 'none';
             document.querySelectorAll('.app-page').forEach(page => page.classList.add('hidden-page'));
-            
+
             const playerPage = document.getElementById('playerPage');
             playerPage.classList.add('active');
             document.getElementById('categorySelector').value = cat;
@@ -1832,7 +1977,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             isPlaying = false;
             updatePlayButton();
             stopTimer();
-            
+
             // Otomatis memutar lagu ketika kategori dipilih
             setTimeout(() => {
                 isPlaying = true;
@@ -1936,7 +2081,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             resetTimer();
             updateTrackDisplay();
             updateTimerDisplay();
-            
+
             if (isPlaying) {
                 playCurrentTrack();
             }
@@ -1950,7 +2095,7 @@ $user_email = $_SESSION['user_email'] ?? '';
             resetTimer();
             updateTrackDisplay();
             updateTimerDisplay();
-            
+
             if (isPlaying) {
                 playCurrentTrack();
             }
@@ -1987,12 +2132,136 @@ $user_email = $_SESSION['user_email'] ?? '';
         }
 
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', function (e) {
+            overlay.addEventListener('click', function(e) {
                 if (e.target === this) {
                     this.classList.remove('active');
                 }
             });
         });
+
+        // ==================== FUNGSI EDIT PROFILE & PASSWORD ====================
+
+        // Fungsi untuk menampilkan pesan
+        function showMessage(message, isSuccess = true) {
+            // Buat elemen pesan
+            const messageEl = document.createElement('div');
+            messageEl.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        background: ${isSuccess ? '#4CAF50' : '#f44336'};
+        color: white;
+        border-radius: 4px;
+        z-index: 10000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    `;
+            messageEl.textContent = message;
+
+            document.body.appendChild(messageEl);
+
+            // Hapus pesan setelah 3 detik
+            setTimeout(() => {
+                document.body.removeChild(messageEl);
+            }, 3000);
+        }
+
+        // Handle form edit profile
+        document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage(data.message, true);
+                        closeEditModal();
+                        // Update data di session
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        showMessage(data.message, false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('Terjadi kesalahan', false);
+                });
+        });
+
+        // Handle form ganti password
+        document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage(data.message, true);
+                        closePasswordModal();
+                        // Reset form
+                        this.reset();
+                    } else {
+                        showMessage(data.message, false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('Terjadi kesalahan', false);
+                });
+        });
+
+        // Handle form hapus akun
+        document.getElementById('deleteAccountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!confirm('Apakah Anda benar-benar yakin? Tindakan ini tidak dapat dibatalkan!')) {
+                return;
+            }
+
+            const formData = new FormData(this);
+
+            fetch('', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage(data.message, true);
+                        setTimeout(() => {
+                            window.location.href = 'sign_in.php';
+                        }, 2000);
+                    } else {
+                        showMessage(data.message, false);
+                        closeDeleteModal();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('Terjadi kesalahan', false);
+                });
+        });
+
+        // Fungsi modal tambahan
+        function confirmDeleteAccount() {
+            document.getElementById('deleteConfirmModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteConfirmModal').classList.remove('active');
+        }
     </script>
 </body>
 
