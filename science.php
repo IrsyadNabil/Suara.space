@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science you can hear</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #6366f1;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+            position: relative;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #000 70%);
+        }
+
+        .hero-title {
+            font-size: 72px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: #9ca3af;
+            max-width: 600px;
+            margin-bottom: 30px;
+            /* Disesuaikan untuk spacing lebih baik dengan gambar */
+            line-height: 1.6;
+        }
+
+        /* Perbaikan: Selector tunggal untuk container gambar hero */
+        .hero-imageSC {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            /* Spacing vertikal ditingkatkan */
+        }
+
+        .hero-image-item {
+            /* Kelas baru untuk img individual */
+            width: 280px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+            /* Pastikan gambar terpotong rapi */
+        }
+
+        .section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Perbaikan: Styling untuk <img> di feature-icon */
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            object-fit: cover;
+            /* Untuk img, potong rapi */
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            /* Overlay gradien opsional */
+            position: relative;
+            /* Untuk overlay jika diperlukan */
+        }
+
+        .feature-icon::after {
+            /* Overlay gradien tipis untuk img */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 0.2;
+            border-radius: inherit;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            color: #9ca3af;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* Perbaikan: Ubah ke flex untuk alignment kiri konsisten */
+        .product-showcase {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #000 70%);
+            padding: 100px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            /* Alignment kiri untuk semua anak */
+            position: relative;
+        }
+
+        .performance-section {
+            background: linear-gradient(135deg,
+                    rgba(99, 102, 241, 0.05) 0%,
+                    rgba(139, 92, 246, 0.15) 100%);
+            border-radius: 24px;
+            padding: 60px 40px;
+            width: 100%;
+            margin: 0;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: block;
+        }
+
+        .performance-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #fff;
+            text-align: left;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .performance-subtitle {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 20px 0 30px;
+            color: #fff;
+            text-align: left;
+        }
+
+        .performance-desc {
+            font-size: 18px;
+            color: #9ca3af;
+            line-height: 1.6;
+            text-align: left;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        /* Hapus duplikasi: Satu selector saja untuk .read-science-btn */
+        .read-science-btn {
+            display: inline-block;
+            background: linear-gradient(135deg,
+                    rgba(99, 102, 241, 0.2) 0%,
+                    rgba(139, 92, 246, 0.1) 100%);
+            color: #a78bfa;
+            padding: 16px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            text-align: center;
+            /* Teks di tombol tetap center */
+            backdrop-filter: blur(10px);
+            align-self: flex-start;
+            /* Ke kiri relatif container */
+            margin-top: 20px;
+        }
+
+        .read-science-btn:hover {
+            background: linear-gradient(135deg,
+                    rgba(99, 102, 241, 0.3) 0%,
+                    rgba(139, 92, 246, 0.2) 100%);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .color-options {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .color-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 3px solid transparent;
+        }
+
+        .color-circle:hover {
+            transform: scale(1.1);
+            border-color: #6366f1;
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.6);
+        }
+
+        .testimonials {
+            background: #0a0a0a;
+            padding: 100px 20px;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .testimonial-text {
+            color: #fff;
+            /* Perbaiki: Hilangkan f tambahan di hex */
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .testimonial-author {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .author-name {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Hapus .author-title karena tidak digunakan di HTML */
+
+        .read-article {
+            color: rgba(134, 136, 251, 1);
+            /* Perbaiki: Gunakan rgba untuk kejelasan */
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .read-article:hover {
+            color: #8b5cf6;
+        }
+
+        .stats-section {
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            max-width: 1000px;
+            margin: 60px auto 0;
+        }
+
+        .stat-item {
+            padding: 30px;
+        }
+
+        .stat-number {
+            font-size: 56px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        .footer {
+            background: #0a0a0a;
+            padding: 60px 20px 30px;
+            border-top: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #9ca3af;
+            text-decoration: none;
+            margin-bottom: 10px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #6366f1;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(99, 102, 241, 0.1);
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .waveform {
+            width: 100%;
+            height: 200px;
+            margin: 60px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .wave-bar {
+            width: 20px;
+            background: linear-gradient(135deg, #f163d7ff 0%, #8b5cf6 100%);
+            border-radius: 4px;
+            height: 20px;
+            /* Tambah height awal untuk mencegah flicker */
+            animation: wave 1.5s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                height: 20px;
+            }
+
+            50% {
+                height: 160px;
+            }
+        }
+
+        .wave-bar:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .wave-bar:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .wave-bar:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .wave-bar:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        .wave-bar:nth-child(6) {
+            animation-delay: 0.3s;
+        }
+
+        .wave-bar:nth-child(7) {
+            animation-delay: 0.2s;
+        }
+
+        .wave-bar:nth-child(8) {
+            animation-delay: 0.1s;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Tambahan: Responsivitas untuk performance-section */
+            .performance-section {
+                padding: 40px 20px;
+                border-radius: 16px;
+            }
+
+            .performance-title {
+                font-size: 20px;
+            }
+
+            .performance-subtitle {
+                font-size: 28px;
+            }
+
+            .performance-desc {
+                font-size: 16px;
+            }
+
+            .read-science-btn {
+                padding: 14px 30px;
+                font-size: 14px;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="index.html">🎧 AUDIO</a>
+        </div>
+        <nav class="nav">
+            <a href="#features">Features</a>
+            <a href="#product">Product</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#science">Science</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1 class="hero-title">Science you can hear</h1>
+        <p class="hero-subtitle">
+            Experience revolutionary audio technology backed by biomedical research.
+            Personalized neural stimulation meets premium sound quality.
+        </p>
+        <!-- Container untuk tiga gambar -->
+        <div class="hero-imageSC">
+            <img src="hp1.jpg" alt="Headphone man1" class="hero-image-item">
+            <img src="hp2.jpg" alt="Headphone man2" class="hero-image-item">
+            <img src="hp3.jpg" alt="Headphone man3" class="hero-image-item">
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Play the ultimate hearing test with <br>plurallistic controls</h2>
+        <div class="feature-grid">
+            <!-- Kartu 1: Analisis Biomedis -->
+            <div class="feature-card">
+                <img src="bio.jpg.jpg" alt="Ikon analisis biomedis" class="feature-icon"> <!-- Ekstensi dibersihkan -->
+                <h3 class="feature-title">Biomedical analysis</h3>
+                <p class="feature-desc">Advanced algorithms analyze your unique hearing profile to deliver personalized neural stimulation.</p>
+            </div>
+
+            <!-- Kartu 2: Analisis EEG Berbasis In-Time -->
+            <div class="feature-card">
+                <img src="brain.jpeg.jpg" alt="Ikon monitoring EEG" class="feature-icon"> <!-- Ekstensi dibersihkan -->
+                <h3 class="feature-title">In-base EEG analysis</h3>
+                <p class="feature-desc">Real-time brainwave monitoring ensures optimal stimulation patterns for your brain.</p>
+            </div>
+
+            <!-- Kartu 3: Pembelajaran Supervised -->
+            <div class="feature-card">
+                <img src="ai.jpg.jpg" alt="Ikon adaptasi AI" class="feature-icon"> <!-- Ekstensi dibersihkan -->
+                <h3 class="feature-title">Supervised learning</h3>
+                <p class="feature-desc">AI-powered adaptation that learns from your preferences to continuously improve your experience.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-showcase">
+        <div class="performance-section">
+            <h2 class="performance-title">How do we know Suara.Space works?</h2>
+            <h3 class="performance-subtitle">Performance testing with placebo controls</h3>
+            <p class="performance-desc">
+                We test our music with simple games used to measure focused attention in psychology research.
+                Our experiments always include a control (placebo) of the same music without Suara.Space technology,
+                so we can be sure our tech is what makes the difference.
+            </p>
+            <a href="#science" class="read-science-btn">READ THE LATEST SCIENCE</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Patented neural entertainment</h2>
+        <div class="waveform">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+        </div>
+        <p style="text-align: center; color: #9ca3af; max-width: 700px; margin: 0 auto; line-height: 1.8;">
+            Our proprietary technology uses precisely calibrated frequencies to stimulate neural pathways,
+            enhancing cognitive function and promoting states of focused relaxation.
+        </p>
+    </section>
+
+    <section class="stats-section">
+        <h2 class="section-title">Trusted by innovators worldwide</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">User satisfaction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Active users</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Research papers</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Neural tracking</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="reviews">
+        <h2 class="section-title">Supporting literature</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-text">Preferred stimulation levels in introverts and extroverts: Effects on arousal and performance.</p>
+                <div class="testimonial-author">
+                    <div class="author-name">Geen, R. G. (1984)</div>
+                    <br>
+                    <a href="#" class="read-article">Read article</a>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">Cortical activity patterns in ADHD during arousal, activation and sustained attention.</p>
+                <div class="testimonial-author">
+                    <div class="author-name">Loo, S. K. et al. (2009)</div>
+                    <br>
+                    <a href="#" class="read-article">Read article</a>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">The differential distraction of background music on the cognitive test performance of introvert and extravert.</p>
+                <div class="testimonial-author">
+                    <div class="author-name">Furnham, A. & Bradley, A. (1997)</div>
+                    <br>
+                    <a href="#" class="read-article">Read article</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="science">
+        <h2 class="section-title">Read our science</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3 class="feature-title">Neural Plasticity Research</h3>
+                <p class="feature-desc">Published studies on how targeted audio stimulation can enhance neuroplasticity and cognitive performance.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="feature-title">Brainwave Optimization</h3>
+                <p class="feature-desc">Peer-reviewed findings on EEG-guided audio therapy for stress reduction and mental clarity.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="feature-title">Personalized Acoustics</h3>
+                <p class="feature-desc">Research on machine learning algorithms that adapt sound profiles to individual hearing characteristics.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Product</h3>
+                <a href="#">Features</a>
+                <a href="#">Technology</a>
+                <a href="#">Pricing</a>
+                <a href="#">Reviews</a>
+            </div>
+            <div class="footer-section">
+                <h3>Research</h3>
+                <a href="#">Publications</a>
+                <a href="#">Clinical Trials</a>
+                <a href="#">White Papers</a>
+                <a href="#">Case Studies</a>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <a href="#">About Us</a>
+                <a href="#">Team</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <a href="#">Help Center</a>
+                <a href="#">Documentation</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Audio Science. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
