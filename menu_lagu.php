@@ -1543,9 +1543,10 @@ $user_email = $_SESSION['user_email'] ?? '';
         </div>
     <div id="sidebar" class="sidebar">
         <h2>Menu</h2>
-        <a href="javascript:void(0)" onclick="showPage('library')">📖 Library Anda</a>
-        <a href="javascript:void(0)" onclick="showPage('explore')">🔍 Jelajahi Musik</a>
-        <a href="javascript:void(0)" onclick="showPage('profile')">👤 Profil Saya</a>
+        <a href="javascript:void(0)" onclick="showPage('library')">Library Anda</a>
+        <a href="javascript:void(0)" onclick="showPage('explore')">Jelajahi Musik</a>
+        <a href="javascript:void(0)" onclick="showPage('profile')">Profil Saya</a>
+        <a href="logout.php">Logout</a>
     </div>
 
     <div class="modal-overlay" id="editModal">
