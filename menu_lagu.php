@@ -198,6 +198,7 @@
             transition: all 0.25s ease;
             user-select: none;
             box-shadow: 0 10px 40px rgb(0 0 0 / 0.4);
+            margin : 20px;
         }
 
         .category-card:hover,
@@ -1105,7 +1106,7 @@
 </head>
 
 <body>
-    <div class="logo" onclick="goHome()">S</div>
+    <div class="logo" onclick="location.href='index.html'">S</div>
 
     <button id="toggleButton" class="top-right-button" aria-label="Toggle Library Menu">
         ☰ Menu
@@ -1167,12 +1168,7 @@
                     <option value="Sleep">Sleep</option>
                     <option value="Meditate">Meditate</option>
                 </select>
-                <div class="header-right">
-                    <label class="switch" aria-label="Toggle ADHD Mode">
-                        <input type="checkbox" id="adhdToggle" />
-                        <span class="slider"></span>
-                    </label>
-                </div>
+                
             </header>
 
             <div class="player-container">

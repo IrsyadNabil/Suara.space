@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Cek apakah user sudah login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: sign_in.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +15,7 @@
 <title>Loading Screen</title>
 
 <style>
+/* CSS yang sama seperti sebelumnya */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: url('backgroundsign.jpg') no-repeat center center fixed;
@@ -42,12 +53,10 @@ body {
     background: rgba(200, 200, 200, 0.12);
     border-radius: 25px;
     padding: 40px;
-
     box-shadow:
         0 20px 40px rgba(0, 0, 0, 0.35),
         0 10px 20px rgba(0, 0, 0, 0.25);
 }
-
 
 /* ITEM */
 .item {
@@ -89,7 +98,6 @@ body {
     border: none;
     cursor: pointer;
     transition: 0.25s ease;
-
     opacity: 0;
     pointer-events: none;
 }
@@ -106,9 +114,7 @@ body {
 <div id="loading-screen">
     <h1>Personalizing your Focus<br>sounds...</h1>
 
-    <!-- FIXED DI SINI -->
     <div class="box card-container">
-
         <div class="item">
             <span>Activities</span>
             <div class="bar"><div class="fill" data-delay="0"></div></div>
@@ -133,8 +139,7 @@ body {
             <div class="check"></div>
         </div>
 
-        <button class="button-next" id="nextBtn"><strong>Explore the Music</strong></button>
-
+        <button class="button-next" id="nextBtn" onclick="redirectToDashboard()"><strong>Explore the Music</strong></button>
     </div>
 </div>
 
@@ -160,6 +165,11 @@ document.querySelectorAll(".fill").forEach((bar) => {
         }, 1200);
     }, delay);
 });
+
+function redirectToDashboard() {
+    // Redirect ke halaman dashboard atau home setelah login
+    window.location.href = "menu_lagu.php"; // Ganti dengan halaman tujuan Anda
+}
 </script>
 
 </body>

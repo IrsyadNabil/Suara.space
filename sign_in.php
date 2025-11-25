@@ -1,3 +1,44 @@
+<?php
+session_start();
+require_once 'connection.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        
+        // Debug: lihat hash yang ada di database
+        error_log("Stored Hash: " . $user['password']);
+        error_log("Stored Hash Length: " . strlen($user['password']));
+        
+        // Verifikasi password
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id_user'];
+            $_SESSION['nama'] = $user['nama'];
+            $_SESSION['email'] = $user['email'];
+            header("Location: loading_screen.php");
+            exit();
+        } else {
+            $error = "Password salah!";
+            
+            // Debug info
+            error_log("Password verification failed for email: " . $email);
+        }
+    } else {
+        $error = "Email tidak ditemukan!";
+    }
+    $stmt->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -5,6 +46,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
     <style>
+        /* CSS yang sama seperti sebelumnya */
         * {
             margin: 0;
             padding: 0;
@@ -113,6 +155,18 @@
             margin-bottom: 35px;
             font-size: 28px;
             font-weight: 600;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
         }
 
         /* Form Elements */
@@ -293,13 +347,18 @@
         <div class="auth-container">
             <div class="auth-box">
                 <h2>Sign In</h2>
-                <form id="signinForm">
+                
+                <?php if(isset($error)): ?>
+                    <div class="error-message"><?php echo $error; ?></div>
+                <?php endif; ?>
+                
+                <form id="signinForm" method="POST" action="">
                     <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Email" required>
+                        <input type="email" class="form-control" name="email" placeholder="Email" required>
                     </div>
                     <div class="form-group">
                         <div class="input-wrapper">
-                            <input type="password" class="form-control" id="password" placeholder="Password" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                             <button type="button" class="toggle-password" onclick="togglePassword()">👁</button>
                         </div>
                     </div>
@@ -342,16 +401,6 @@
         function loginWithFacebook() {
             alert('Login with Facebook - Hubungkan dengan Facebook OAuth API');
         }
-
-        document.getElementById('signinForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = e.target.querySelector('input[type="email"]').value;
-            const password = e.target.querySelector('input[type="password"]').value;
-            
-            if (email && password) {
-                alert('Sign In successful! (Demo only)\n\nUntuk production:\n1. Kirim data ke backend API\n2. Terima token authentication\n3. Simpan token di localStorage\n4. Redirect ke dashboard');
-            }
-        });
     </script>
 </body>
 </html>
