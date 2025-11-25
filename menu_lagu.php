@@ -13,7 +13,7 @@ $user_id = $_SESSION['user_id'] ?? '';
 
 // Koneksi database (sesuaikan dengan konfigurasi Anda)
 $host = 'localhost';
-$dbname = 'music_therapy';
+$dbname = 'suara.space';
 $username = 'root';
 $password = '';
 
@@ -27,7 +27,7 @@ try {
 // Fungsi untuk mendapatkan data user
 function getUserData($pdo, $user_id)
 {
-    $stmt = $pdo->prepare("SELECT name, email FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT nama, email FROM users WHERE id_user = ?");
     $stmt->execute([$user_id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
