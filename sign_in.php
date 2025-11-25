@@ -22,10 +22,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             // Verifikasi password
             if (password_verify($password, $user['password'])) {
-                // Login berhasil
-                $_SESSION['user_id'] = $user['id_user'];
-                $_SESSION['nama'] = $user['nama'];
-                $_SESSION['email'] = $user['email'];
+                // Login berhasil - SIMPAN SESUAI STRUCTURE DATABASE ANDA
+                $_SESSION['user_id'] = $user['id_user'];        // Sesuai kolom di database Anda
+                $_SESSION['user_name'] = $user['nama'];         // Ubah dari 'nama' menjadi 'user_name'
+                $_SESSION['user_email'] = $user['email'];       // Ubah dari 'email' menjadi 'user_email'
                 $_SESSION['logged_in'] = true;
                 
                 header("Location: loading_screen.php");
