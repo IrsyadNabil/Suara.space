@@ -1102,6 +1102,110 @@
         .btn-secondary:hover {
             background: #2a2a3a;
         }
+
+        /* Tambahkan style untuk background images */
+.get-started-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px 80px;
+    text-align: center;
+    max-width: 960px;
+    margin: auto;
+    gap: 40px;
+    position: relative;
+    z-index: 100;
+    min-height: 100vh;
+}
+
+/* Background default untuk get-started page */
+.get-started-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #140f2b 0%, #1a153d 60%, #0f1438 100%);
+    z-index: -1;
+}
+
+/* Background images untuk setiap kategori */
+.player-page.focus-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('images/focus-bg.jpg'); /* Ganti dengan path gambar focus Anda */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+}
+
+.player-page.relax-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('images/relax-bg.jpg'); /* Ganti dengan path gambar relax Anda */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+}
+
+.player-page.sleep-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('images/sleep-bg.jpg'); /* Ganti dengan path gambar sleep Anda */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+}
+
+.player-page.meditate-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('images/meditate-bg.jpg'); /* Ganti dengan path gambar meditate Anda */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+}
+
+/* Overlay gelap untuk meningkatkan keterbacaan teks */
+.player-page::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 10, 20, 0.7); /* Overlay gelap */
+    z-index: -1;
+}
+
+/* Pastikan konten tetap terlihat jelas */
+.player-page {
+    position: relative;
+    z-index: 10;
+}
+
     </style>
 </head>
 
