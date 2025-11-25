@@ -35,7 +35,7 @@ function getUserData($pdo, $user_id)
 // Fungsi untuk update profile
 function updateProfile($pdo, $user_id, $name, $email)
 {
-    $stmt = $pdo->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE users SET name = ?, email = ? WHERE id_user = ?");
     return $stmt->execute([$name, $email, $user_id]);
 }
 
@@ -43,7 +43,7 @@ function updateProfile($pdo, $user_id, $name, $email)
 function changePassword($pdo, $user_id, $current_password, $new_password)
 {
     // Verifikasi password saat ini
-    $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT password FROM users WHERE id_user = ?");
     $stmt->execute([$user_id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -53,14 +53,14 @@ function changePassword($pdo, $user_id, $current_password, $new_password)
 
     // Update password baru
     $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id_user = ?");
     return $stmt->execute([$hashed_password, $user_id]);
 }
 
 // Fungsi untuk menghapus akun
 function deleteAccount($pdo, $user_id)
 {
-    $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("DELETE FROM users WHERE id_user = ?");
     return $stmt->execute([$user_id]);
 }
 
