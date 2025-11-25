@@ -6,47 +6,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     
-    if (!empty($email) && !empty($password)) {
-        $_SESSION['user_email'] = $email;
-        $_SESSION['user_name'] = explode('@', $email)[0];
-        $_SESSION['logged_in'] = true;
-        
-        header('Location: menu_lagu.php');
-        exit();
-    } else {
+    // Validasi input kosong
+    if (empty($email) || empty($password)) {
         $error = "Email dan password harus diisi";
-    }
-
-    $sql = "SELECT * FROM users WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows == 1) {
-        $user = $result->fetch_assoc();
-        
-        // Debug: lihat hash yang ada di database
-        error_log("Stored Hash: " . $user['password']);
-        error_log("Stored Hash Length: " . strlen($user['password']));
-        
-        // Verifikasi password
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id_user'];
-            $_SESSION['nama'] = $user['nama'];
-            $_SESSION['email'] = $user['email'];
-            header("Location: loading_screen.php");
-            exit();
-        } else {
-            $error = "Password salah!";
-            
-            // Debug info
-            error_log("Password verification failed for email: " . $email);
-        }
     } else {
-        $error = "Email tidak ditemukan!";
+        // Query untuk cek user
+        $sql = "SELECT * FROM users WHERE email = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows == 1) {
+            $user = $result->fetch_assoc();
+            
+            // Verifikasi password
+            if (password_verify($password, $user['password'])) {
+                // Login berhasil
+                $_SESSION['user_id'] = $user['id_user'];
+                $_SESSION['nama'] = $user['nama'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['logged_in'] = true;
+                
+                header("Location: loading_screen.php");
+                exit();
+            } else {
+                $error = "Password salah!";
+            }
+        } else {
+            $error = "Email tidak ditemukan!";
+        }
+        $stmt->close();
     }
-    $stmt->close();
 }
 ?>
 
