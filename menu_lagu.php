@@ -1210,6 +1210,9 @@
 </head>
 
 <body>
+    <!-- Audio element untuk memutar lagu -->
+    <audio id="audioPlayer" preload="auto"></audio>
+
     <div class="logo" onclick="location.href='index.html'">S</div>
 
     <button id="toggleButton" class="top-right-button" aria-label="Toggle Library Menu">
@@ -1595,6 +1598,9 @@
 
 
     <script>
+        // Audio Player
+        const audioPlayer = document.getElementById('audioPlayer');
+
         // Kodingan Sidebar Toggle
         const toggleButton = document.getElementById('toggleButton');
         const sidebar = document.getElementById('sidebar');
@@ -1641,6 +1647,7 @@
             isPlaying = false;
             updatePlayButton();
             resetTimer();
+            audioPlayer.pause();
         }
 
         // FUNGSI BARU UNTUK KEMBALI KE HOME (Get Started)
@@ -1662,10 +1669,11 @@
             isPlaying = false;
             updatePlayButton();
             resetTimer();
+            audioPlayer.pause();
         }
 
 
-        // Kodingan Asli Player dan Kategori (tidak diubah)
+        // Kodingan Asli Player dan Kategori (dengan modifikasi untuk lagu)
         let isPlaying = false;
         let minutes = 0;
         let seconds = 0;
@@ -1673,81 +1681,98 @@
         let currentTrackIndex = 0;
         let currentCategory = 'Focus';
 
+        // Data lagu yang telah dimodifikasi
         const tracks = {
-            Focus: [{
-                    title: 'Deep Work Flow',
+            Focus: [
+                {
+                    title: 'Herbarium.mp3',
                     color: '#ff6b9d',
                     category: 'High Neural Effect',
-                    genre: 'Electronic'
+                    genre: 'Electronic',
+                    file: 'Herbarium.mp3'
                 },
                 {
-                    title: 'Concentration Zone',
+                    title: 'Beautiful',
                     color: '#c06c84',
                     category: 'High Neural Effect',
-                    genre: 'Electronic'
+                    genre: 'Electronic',
+                    file: 'Beautiful.mp3'
                 },
                 {
-                    title: 'Let In The Light',
+                    title: 'Now is enough',
                     color: '#ff8fab',
                     category: 'High Neural Effect',
-                    genre: 'Electronic'
+                    genre: 'Electronic',
+                    file: 'Now is enough.mp3'
                 },
             ],
-            Relax: [{
-                    title: 'Calm Waters',
+            Relax: [
+                {
+                    title: 'Multo.mp3',
                     color: '#4facfe',
                     category: 'Serene Vibes',
-                    genre: 'Ambient'
+                    genre: 'Ambient',
+                    file: 'Multo.mp3'
                 },
                 {
-                    title: 'Peaceful Mind',
+                    title: 'Beautiful',
                     color: '#00f2fe',
                     category: 'Serene Vibes',
-                    genre: 'Ambient'
+                    genre: 'Ambient',
+                    file: 'Beautiful.mp3'
                 },
                 {
-                    title: 'Gentle Breeze',
+                    title: 'Now is enough',
                     color: '#7eb8ff',
                     category: 'Serene Vibes',
-                    genre: 'Ambient'
+                    genre: 'Ambient',
+                    file: 'Now is enough.mp3'
                 },
             ],
-            Sleep: [{
-                    title: 'Dream State',
+            Sleep: [
+                {
+                    title: 'Herbarium.mp3',
                     color: '#667eea',
                     category: 'Night Calm',
-                    genre: 'Chill'
+                    genre: 'Chill',
+                    file: 'Herbarium.mp3'
                 },
                 {
-                    title: 'Night Lullaby',
+                    title: 'Multo',
                     color: '#764ba2',
                     category: 'Night Calm',
-                    genre: 'Chill'
+                    genre: 'Chill',
+                    file: 'Multo.mp3'
                 },
                 {
-                    title: 'Restful Sleep',
+                    title: 'Beautiful',
                     color: '#8b7cd6',
                     category: 'Night Calm',
-                    genre: 'Chill'
+                    genre: 'Chill',
+                    file: 'Beautiful.mp3'
                 },
             ],
-            Meditate: [{
-                    title: 'Inner Peace',
+            Meditate: [
+                {
+                    title: 'Now is enough.mp3',
                     color: '#00c9ff',
                     category: 'Zen Atmosphere',
-                    genre: 'Meditative'
+                    genre: 'Meditative',
+                    file: 'Now is enough.mp3'
                 },
                 {
-                    title: 'Mindful Breath',
+                    title: 'Multo',
                     color: '#92fe9d',
                     category: 'Zen Atmosphere',
-                    genre: 'Meditative'
+                    genre: 'Meditative',
+                    file: 'Multo.mp3'
                 },
                 {
-                    title: 'Zen Garden',
+                    title: 'Herbarium',
                     color: '#4ee9ce',
                     category: 'Zen Atmosphere',
-                    genre: 'Meditative'
+                    genre: 'Meditative',
+                    file: 'Herbarium.mp3'
                 },
             ],
         };
@@ -1764,6 +1789,17 @@
             statusText.textContent = `Increasing ${currentCategory}...`;
 
             playerPage.style.background = `linear-gradient(135deg, ${track.color}33 0%, #1a162f 50%, #0f1438 100%)`;
+
+            // Update audio source
+            audioPlayer.src = track.file;
+        }
+
+        function playCurrentTrack() {
+            const track = tracks[currentCategory][currentTrackIndex];
+            audioPlayer.src = track.file;
+            audioPlayer.play().catch(e => {
+                console.log('Autoplay prevented:', e);
+            });
         }
 
         function selectCategory(cat) {
@@ -1782,6 +1818,14 @@
             isPlaying = false;
             updatePlayButton();
             stopTimer();
+            
+            // Otomatis memutar lagu ketika kategori dipilih
+            setTimeout(() => {
+                isPlaying = true;
+                updatePlayButton();
+                startTimer();
+                playCurrentTrack();
+            }, 500);
         }
 
         function goBack() {
@@ -1792,6 +1836,7 @@
             isPlaying = false;
             updatePlayButton();
             resetTimer();
+            audioPlayer.pause();
         }
 
         function changeCategory() {
@@ -1805,14 +1850,17 @@
             isPlaying = false;
             updatePlayButton();
             stopTimer();
+            audioPlayer.pause();
         }
 
         function togglePlayPause() {
             isPlaying = !isPlaying;
             if (isPlaying) {
                 startTimer();
+                audioPlayer.play();
             } else {
                 stopTimer();
+                audioPlayer.pause();
             }
             updatePlayButton();
         }
@@ -1874,9 +1922,10 @@
             resetTimer();
             updateTrackDisplay();
             updateTimerDisplay();
-            isPlaying = false;
-            updatePlayButton();
-            stopTimer();
+            
+            if (isPlaying) {
+                playCurrentTrack();
+            }
         }
 
         function nextTrack() {
@@ -1887,10 +1936,19 @@
             resetTimer();
             updateTrackDisplay();
             updateTimerDisplay();
-            isPlaying = false;
-            updatePlayButton();
-            stopTimer();
+            
+            if (isPlaying) {
+                playCurrentTrack();
+            }
         }
+
+        // Event listener untuk ketika lagu selesai
+        audioPlayer.addEventListener('ended', function() {
+            nextTrack();
+            if (isPlaying) {
+                playCurrentTrack();
+            }
+        });
 
         // FUNGSI MODAL PROFILE (Dipindahkan dari profile.php)
         function openEditModal() {
