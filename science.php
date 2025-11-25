@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Science you can hear</title>
+    <title>Science you can hear - Suara.Space</title>
     <style>
         * {
             margin: 0;
@@ -19,43 +19,123 @@
             overflow-x: hidden;
         }
 
+        /* Header Navigation - UPDATED */
         .header {
-            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 20px 60px;
             position: fixed;
-            width: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 1000;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(10px);
-        }
-        
-        .header a {
-            color: #fff;
-            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s;
+            width: 100%;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.3s;
         }
 
-        .nav {
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
             display: flex;
-            gap: 40px;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #0a0a0a;
+            font-size: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
             align-items: center;
         }
 
-        .nav a {
-            color: #fff;
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
             transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
         }
 
-        .nav a:hover {
-            color: #6366f1;
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .nav-links a.active {
+            color: white;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #a855f7, #6366f1);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                width: 0;
+                left: 50%;
+            }
+            to {
+                width: 100%;
+                left: 0;
+            }
+        }
+
+        .btn-app {
+            padding: 12px 28px;
+            background: white;
+            color: #0a0a0a;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-app:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+            background: #f0f0f0;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
         }
 
         .hero {
@@ -85,27 +165,22 @@
             color: #9ca3af;
             max-width: 600px;
             margin-bottom: 30px;
-            /* Disesuaikan untuk spacing lebih baik dengan gambar */
             line-height: 1.6;
         }
 
-        /* Perbaikan: Selector tunggal untuk container gambar hero */
         .hero-imageSC {
             display: flex;
             justify-content: center;
             gap: 30px;
             margin: 20px 0;
-            /* Spacing vertikal ditingkatkan */
         }
 
         .hero-image-item {
-            /* Kelas baru untuk img individual */
             width: 280px;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             object-fit: cover;
-            /* Pastikan gambar terpotong rapi */
         }
 
         .section {
@@ -145,7 +220,6 @@
             box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
         }
 
-        /* Perbaikan: Styling untuk <img> di feature-icon */
         .feature-icon {
             width: 80px;
             height: 80px;
@@ -155,15 +229,11 @@
             align-items: center;
             justify-content: center;
             object-fit: cover;
-            /* Untuk img, potong rapi */
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            /* Overlay gradien opsional */
             position: relative;
-            /* Untuk overlay jika diperlukan */
         }
 
         .feature-icon::after {
-            /* Overlay gradien tipis untuk img */
             content: '';
             position: absolute;
             top: 0;
@@ -187,14 +257,12 @@
             font-size: 15px;
         }
 
-        /* Perbaikan: Ubah ke flex untuk alignment kiri konsisten */
         .product-showcase {
             background: radial-gradient(ellipse at center, #1a1a2e 0%, #000 70%);
             padding: 100px 20px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            /* Alignment kiri untuk semua anak */
             position: relative;
         }
 
@@ -241,7 +309,6 @@
             max-width: 600px;
         }
 
-        /* Hapus duplikasi: Satu selector saja untuk .read-science-btn */
         .read-science-btn {
             display: inline-block;
             background: linear-gradient(135deg,
@@ -256,10 +323,8 @@
             transition: all 0.3s ease;
             border: 1px solid rgba(99, 102, 241, 0.3);
             text-align: center;
-            /* Teks di tombol tetap center */
             backdrop-filter: blur(10px);
             align-self: flex-start;
-            /* Ke kiri relatif container */
             margin-top: 20px;
         }
 
@@ -272,86 +337,40 @@
             box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
         }
 
-        .color-options {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
+        .waveform {
+            width: 100%;
+            height: 200px;
             margin: 60px 0;
-        }
-
-        .color-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 3px solid transparent;
-        }
-
-        .color-circle:hover {
-            transform: scale(1.1);
-            border-color: #6366f1;
-            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.6);
-        }
-
-        .testimonials {
-            background: #0a0a0a;
-            padding: 100px 20px;
-        }
-
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .testimonial-card {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-            border-radius: 20px;
-            padding: 30px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
 
-        .testimonial-text {
-            color: #fff;
-            /* Perbaiki: Hilangkan f tambahan di hex */
-            line-height: 1.8;
-            margin-bottom: 20px;
-            font-size: 20px;
-            font-weight: 700;
+        .wave-bar {
+            width: 20px;
+            background: linear-gradient(135deg, #f163d7ff 0%, #8b5cf6 100%);
+            border-radius: 4px;
+            height: 20px;
+            animation: wave 1.5s ease-in-out infinite;
         }
 
-        .testimonial-author {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
+        @keyframes wave {
+            0%, 100% {
+                height: 20px;
+            }
+            50% {
+                height: 160px;
+            }
         }
 
-        .author-name {
-            color: #6b7280;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        /* Hapus .author-title karena tidak digunakan di HTML */
-
-        .read-article {
-            color: rgba(134, 136, 251, 1);
-            /* Perbaiki: Gunakan rgba untuk kejelasan */
-            text-decoration: none;
-            font-size: 20px;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        .read-article:hover {
-            color: #8b5cf6;
-        }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+        .wave-bar:nth-child(6) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(7) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(8) { animation-delay: 0.1s; }
 
         .stats-section {
             padding: 100px 20px;
@@ -383,6 +402,61 @@
         .stat-label {
             color: #9ca3af;
             font-size: 16px;
+        }
+
+        .testimonials {
+            background: #0a0a0a;
+            padding: 100px 20px;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .testimonial-text {
+            color: #fff;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .testimonial-author {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .author-name {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .read-article {
+            color: rgba(134, 136, 251, 1);
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .read-article:hover {
+            color: #8b5cf6;
         }
 
         .footer {
@@ -426,65 +500,6 @@
             font-size: 14px;
         }
 
-        .waveform {
-            width: 100%;
-            height: 200px;
-            margin: 60px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .wave-bar {
-            width: 20px;
-            background: linear-gradient(135deg, #f163d7ff 0%, #8b5cf6 100%);
-            border-radius: 4px;
-            height: 20px;
-            /* Tambah height awal untuk mencegah flicker */
-            animation: wave 1.5s ease-in-out infinite;
-        }
-
-        @keyframes wave {
-
-            0%,
-            100% {
-                height: 20px;
-            }
-
-            50% {
-                height: 160px;
-            }
-        }
-
-        .wave-bar:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-
-        .wave-bar:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-
-        .wave-bar:nth-child(4) {
-            animation-delay: 0.3s;
-        }
-
-        .wave-bar:nth-child(5) {
-            animation-delay: 0.4s;
-        }
-
-        .wave-bar:nth-child(6) {
-            animation-delay: 0.3s;
-        }
-
-        .wave-bar:nth-child(7) {
-            animation-delay: 0.2s;
-        }
-
-        .wave-bar:nth-child(8) {
-            animation-delay: 0.1s;
-        }
-
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 42px;
@@ -498,7 +513,6 @@
                 grid-template-columns: 1fr;
             }
 
-            /* Tambahan: Responsivitas untuk performance-section */
             .performance-section {
                 padding: 40px 20px;
                 border-radius: 16px;
@@ -521,21 +535,64 @@
                 font-size: 14px;
                 align-self: flex-start;
             }
+
+            .header {
+                padding: 20px 30px;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background: rgba(10, 10, 10, 0.98);
+                padding: 20px;
+                gap: 20px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .btn-app {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 
 <body>
+    <!-- NAVBAR UPDATED -->
     <header class="header">
-        <div class="logo">
-            <a href="index.html">🎧 AUDIO</a>
-        </div>
-        <nav class="nav">
-            <a href="#features">Features</a>
-            <a href="#product">Product</a>
-            <a href="#reviews">Reviews</a>
-            <a href="#science">Science</a>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">S</div>
+            Suara.Space
+        </a>
+        <nav class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="science.php" class="active">Our Science</a>
+            <a href="about_us.php">About Us</a>
         </nav>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        <a href="sign_in.php" class="btn-app">SIGN IN</a>
     </header>
 
     <section class="hero">
@@ -544,7 +601,6 @@
             Experience revolutionary audio technology backed by biomedical research.
             Personalized neural stimulation meets premium sound quality.
         </p>
-        <!-- Container untuk tiga gambar -->
         <div class="hero-imageSC">
             <img src="hp1.jpg" alt="Headphone man1" class="hero-image-item">
             <img src="hp2.jpg" alt="Headphone man2" class="hero-image-item">
@@ -555,23 +611,20 @@
     <section class="section">
         <h2 class="section-title">Play the ultimate hearing test with <br>plurallistic controls</h2>
         <div class="feature-grid">
-            <!-- Kartu 1: Analisis Biomedis -->
             <div class="feature-card">
-                <img src="bio.jpg.jpg" alt="Ikon analisis biomedis" class="feature-icon"> <!-- Ekstensi dibersihkan -->
+                <img src="bio.jpg" alt="Ikon analisis biomedis" class="feature-icon">
                 <h3 class="feature-title">Biomedical analysis</h3>
                 <p class="feature-desc">Advanced algorithms analyze your unique hearing profile to deliver personalized neural stimulation.</p>
             </div>
 
-            <!-- Kartu 2: Analisis EEG Berbasis In-Time -->
             <div class="feature-card">
-                <img src="brain.jpeg.jpg" alt="Ikon monitoring EEG" class="feature-icon"> <!-- Ekstensi dibersihkan -->
+                <img src="brain.jpeg" alt="Ikon monitoring EEG" class="feature-icon">
                 <h3 class="feature-title">In-base EEG analysis</h3>
                 <p class="feature-desc">Real-time brainwave monitoring ensures optimal stimulation patterns for your brain.</p>
             </div>
 
-            <!-- Kartu 3: Pembelajaran Supervised -->
             <div class="feature-card">
-                <img src="ai.jpg.jpg" alt="Ikon adaptasi AI" class="feature-icon"> <!-- Ekstensi dibersihkan -->
+                <img src="ai.jpg" alt="Ikon adaptasi AI" class="feature-icon">
                 <h3 class="feature-title">Supervised learning</h3>
                 <p class="feature-desc">AI-powered adaptation that learns from your preferences to continuously improve your experience.</p>
             </div>
@@ -697,7 +750,7 @@
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="#">About Us</a>
+                <a href="about_us.html">About Us</a>
                 <a href="#">Team</a>
                 <a href="#">Careers</a>
                 <a href="#">Contact</a>
@@ -711,9 +764,42 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 Audio Science. All rights reserved.</p>
+            <p>© 2025 Suara.Space. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Header background on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(10, 10, 10, 0.98)';
+            } else {
+                header.style.background = 'rgba(10, 10, 10, 0.95)';
+            }
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const navLinks = document.getElementById('navLinks');
+            if (!e.target.closest('.header')) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+    </script>
 </body>
 
 </html>
