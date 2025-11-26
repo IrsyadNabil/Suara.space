@@ -102,6 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: white;
             font-size: 20px;
             font-weight: 600;
+            text-decoration: none;
         }
 
         .logo-icon {
@@ -471,10 +472,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="header">
-        <div class="logo">
+        <a href="index.php" class="logo">
             <div class="logo-icon">S</div>
             Suara.Space
-        </div>
         <div>
             <a href="#" class="header-link">Already have an account?</a>
             <a href="sign_in.php" class="header-link btn">SIGN IN</a>
