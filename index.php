@@ -114,12 +114,12 @@ $user_name = $_SESSION['user_name'] ?? '';
             align-items: center;
             gap: 10px;
             color: white;
-            font-size: 14px;
+            font-size: 20px;
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #a855f7, #6366f1);
             border-radius: 50%;
             display: flex;
@@ -255,6 +255,9 @@ $user_name = $_SESSION['user_name'] ?? '';
             position: relative;
             width: 450px;
             height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .glow {
@@ -281,6 +284,26 @@ $user_name = $_SESSION['user_name'] ?? '';
             }
         }
 
+        /* UPDATED: Style untuk gambar hero */
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Fallback jika gambar tidak ditemukan - tetap tampilkan ilustrasi CSS */
         .person {
             position: relative;
             z-index: 2;
@@ -306,70 +329,6 @@ $user_name = $_SESSION['user_name'] ?? '';
             left: 15px;
         }
 
-        .headphones {
-            width: 130px;
-            height: 130px;
-            border: 18px solid #f3f4f6;
-            border-radius: 50%;
-            position: absolute;
-            top: 70px;
-            left: 160px;
-        }
-
-        .body {
-            width: 140px;
-            height: 160px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            border-radius: 40px 40px 0 0;
-            position: absolute;
-            top: 180px;
-            left: 155px;
-        }
-
-        .arm-left {
-            width: 60px;
-            height: 120px;
-            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-            border-radius: 30px;
-            position: absolute;
-            top: 200px;
-            left: 125px;
-            transform: rotate(-15deg);
-        }
-
-        .arm-right {
-            width: 65px;
-            height: 130px;
-            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-            border-radius: 30px;
-            position: absolute;
-            top: 200px;
-            left: 260px;
-            transform: rotate(25deg);
-        }
-
-        .laptop {
-            width: 180px;
-            height: 100px;
-            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
-            border-radius: 8px;
-            position: absolute;
-            top: 310px;
-            left: 135px;
-            transform: perspective(600px) rotateX(25deg);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .laptop::before {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            right: 8px;
-            bottom: 8px;
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            border-radius: 4px;
-        }
 
         .categories {
             position: relative;
@@ -473,6 +432,11 @@ $user_name = $_SESSION['user_name'] ?? '';
                 height: 35px;
                 font-size: 18px;
             }
+
+            .person-illustration {
+                width: 280px;
+                height: 280px;
+            }
         }
     </style>
 </head>
@@ -523,16 +487,12 @@ $user_name = $_SESSION['user_name'] ?? '';
             <div class="hero-visual">
                 <div class="person-illustration">
                     <div class="glow"></div>
-                    <div class="person">
-                        <div class="headphones"></div>
-                        <div class="head">
-                            <div class="hair"></div>
-                        </div>
-                        <div class="body"></div>
-                        <div class="arm-left"></div>
-                        <div class="arm-right"></div>
-                        <div class="laptop"></div>
-                    </div>
+                    <!-- PERUBAHAN UTAMA: Ganti ilustrasi CSS dengan gambar -->
+                    <!-- Jika gambar tidak ada, akan fallback ke ilustrasi CSS di bawah -->
+                    <img src="index.png" alt="Person with headphones" class="hero-image" 
+                         onerror="this.style.display='none'; document.querySelector('.person').style.display='block';">
+                    
+                    
                 </div>
             </div>
         </div>

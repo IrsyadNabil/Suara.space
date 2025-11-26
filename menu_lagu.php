@@ -592,12 +592,14 @@ $user_email = $user_data['email'] ?? $user_email;
         }
 
         .album-art {
-            width: 90px;
-            height: 90px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
-            box-shadow: 0 0 20px rgb(0 201 255 / 0.4);
-        }
+    width: 90px;
+    height: 90px;
+    border-radius: 14px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 0 20px rgba(0, 201, 255, 0.4);
+    transition: all 0.3s ease;
+}
 
         .track-info {
             flex: 1;
@@ -1444,11 +1446,6 @@ $user_email = $user_data['email'] ?? $user_email;
                         <div class="track-category" id="trackCategory">High Neural Effect</div>
                         <div class="track-genre">Electronic</div>
                     </div>
-                    <div class="track-actions" role="group" aria-label="Track actions">
-                        <button type="button" class="action-btn" aria-label="Dislike track">👎</button>
-                        <button type="button" class="action-btn" aria-label="Like track">❤️</button>
-                        <button type="button" class="action-btn" aria-label="Share track">↗️</button>
-                    </div>
                 </section>
             </div>
         </section>
@@ -1844,114 +1841,151 @@ $user_email = $user_data['email'] ?? $user_email;
         let currentTrackIndex = 0;
         let currentCategory = 'Focus';
 
-        // Data lagu yang telah dimodifikasi
         const tracks = {
-            Focus: [{
-                    title: 'Herbarium.mp3',
-                    color: '#ff6b9d',
-                    category: 'High Neural Effect',
-                    genre: 'Electronic',
-                    file: 'Herbarium.mp3'
-                },
-                {
-                    title: 'Beautiful',
-                    color: '#c06c84',
-                    category: 'High Neural Effect',
-                    genre: 'Electronic',
-                    file: 'Beautiful.mp3'
-                },
-                {
-                    title: 'Now is enough',
-                    color: '#ff8fab',
-                    category: 'High Neural Effect',
-                    genre: 'Electronic',
-                    file: 'Now is enough.mp3'
-                },
-            ],
-            Relax: [{
-                    title: 'Multo.mp3',
-                    color: '#4facfe',
-                    category: 'Serene Vibes',
-                    genre: 'Ambient',
-                    file: 'Multo.mp3'
-                },
-                {
-                    title: 'Beautiful',
-                    color: '#00f2fe',
-                    category: 'Serene Vibes',
-                    genre: 'Ambient',
-                    file: 'Beautiful.mp3'
-                },
-                {
-                    title: 'Now is enough',
-                    color: '#7eb8ff',
-                    category: 'Serene Vibes',
-                    genre: 'Ambient',
-                    file: 'Now is enough.mp3'
-                },
-            ],
-            Sleep: [{
-                    title: 'Herbarium.mp3',
-                    color: '#667eea',
-                    category: 'Night Calm',
-                    genre: 'Chill',
-                    file: 'Herbarium.mp3'
-                },
-                {
-                    title: 'Multo',
-                    color: '#764ba2',
-                    category: 'Night Calm',
-                    genre: 'Chill',
-                    file: 'Multo.mp3'
-                },
-                {
-                    title: 'Beautiful',
-                    color: '#8b7cd6',
-                    category: 'Night Calm',
-                    genre: 'Chill',
-                    file: 'Beautiful.mp3'
-                },
-            ],
-            Meditate: [{
-                    title: 'Now is enough.mp3',
-                    color: '#00c9ff',
-                    category: 'Zen Atmosphere',
-                    genre: 'Meditative',
-                    file: 'Now is enough.mp3'
-                },
-                {
-                    title: 'Multo',
-                    color: '#92fe9d',
-                    category: 'Zen Atmosphere',
-                    genre: 'Meditative',
-                    file: 'Multo.mp3'
-                },
-                {
-                    title: 'Herbarium',
-                    color: '#4ee9ce',
-                    category: 'Zen Atmosphere',
-                    genre: 'Meditative',
-                    file: 'Herbarium.mp3'
-                },
-            ],
-        };
+    Focus: [
+        {
+            title: 'Herbarium.mp3',
+            color: '#ff6b9d',
+            category: 'High Neural Effect',
+            genre: 'Electronic',
+            file: 'Herbarium.mp3',
+            cover: 'herbarium.jpg'  // TAMBAHAN INI
+        },
+        {
+            title: 'Beautiful',
+            color: '#c06c84',
+            category: 'High Neural Effect',
+            genre: 'Electronic',
+            file: 'Beautiful.mp3',
+            cover: 'beautiful.jpg'  // TAMBAHAN INI
+        },
+        {
+            title: 'Now is enough',
+            color: '#ff8fab',
+            category: 'High Neural Effect',
+            genre: 'Electronic',
+            file: 'Now is enough.mp3',
+            cover: 'nowisnow.jpg'  // TAMBAHAN INI
+        },
+    ],
+    Relax: [
+        {
+            title: 'Multo.mp3',
+            color: '#4facfe',
+            category: 'Serene Vibes',
+            genre: 'Ambient',
+            file: 'Multo.mp3',
+            cover: 'multo.jpg'  // TAMBAHAN INI
+        },
+        {
+            title: 'Beautiful',
+            color: '#00f2fe',
+            category: 'Serene Vibes',
+            genre: 'Ambient',
+            file: 'Beautiful.mp3',
+            cover: 'beautiful.jpg'  // TAMBAHAN INI
+        },
+        {
+            title: 'Now is enough',
+            color: '#7eb8ff',
+            category: 'Serene Vibes',
+            genre: 'Ambient',
+            file: 'Now is enough.mp3',
+            cover: 'nowisnow.jpg'  // TAMBAHAN INI
+        },
+    ],
+    Sleep: [
+        {
+            title: 'Herbarium.mp3',
+            color: '#667eea',
+            category: 'Night Calm',
+            genre: 'Chill',
+            file: 'Herbarium.mp3',
+            cover: 'herbarium.jpg'  // TAMBAHAN INI
+        },
+        {
+            title: 'Multo',
+            color: '#764ba2',
+            category: 'Night Calm',
+            genre: 'Chill',
+            file: 'Multo.mp3',
+            cover: 'multo.jpg'  // TAMBAHAN INI
+        },
+        {
+            title: 'Beautiful',
+            color: '#8b7cd6',
+            category: 'Night Calm',
+            genre: 'Chill',
+            file: 'Beautiful.mp3',
+            cover: 'beautiful.jpg'  // TAMBAHAN INI
+        },
+    ],
+    Meditate: [
+        {
+            title: 'Now is enough.mp3',
+            color: '#00c9ff',
+            category: 'Zen Atmosphere',
+            genre: 'Meditative',
+            file: 'Now is enough.mp3',
+            cover: 'nowisnow.jpg'  // TAMBAHAN INI
+        },
+        {
+            title: 'Multo',
+            color: '#92fe9d',
+            category: 'Zen Atmosphere',
+            genre: 'Meditative',
+            file: 'Multo.mp3',
+            cover: 'multo.jpg'  // TAMBAHAN INI
+        },
+        {
+            title: 'Herbarium',
+            color: '#4ee9ce',
+            category: 'Zen Atmosphere',
+            genre: 'Meditative',
+            file: 'Herbarium.mp3',
+            cover: 'herbarium.jpg'  // TAMBAHAN INI
+        },
+    ],
+};
 
-        function updateTrackDisplay() {
-            const track = tracks[currentCategory][currentTrackIndex];
-            const playerPage = document.getElementById('playerPage');
-            const trackTitleElem = document.getElementById('trackTitle');
-            const trackCategoryElem = document.getElementById('trackCategory');
-            const statusText = document.getElementById('statusText');
+// GANTI FUNGSI updateTrackDisplay dengan kode di bawah:
+function updateTrackDisplay() {
+    const track = tracks[currentCategory][currentTrackIndex];
+    const playerPage = document.getElementById('playerPage');
+    const trackTitleElem = document.getElementById('trackTitle');
+    const trackCategoryElem = document.getElementById('trackCategory');
+    const statusText = document.getElementById('statusText');
+    const albumArt = document.querySelector('.album-art');  // TAMBAHAN INI
 
-            trackTitleElem.textContent = track.title;
-            trackCategoryElem.textContent = track.category;
-            statusText.textContent = `Increasing ${currentCategory}...`;
+    trackTitleElem.textContent = track.title;
+    trackCategoryElem.textContent = track.category;
+    statusText.textContent = `Increasing ${currentCategory}...`;
 
-            playerPage.style.background = `linear-gradient(135deg, ${track.color}33 0%, #1a162f 50%, #0f1438 100%)`;
+    playerPage.style.background = `linear-gradient(135deg, ${track.color}33 0%, #1a162f 50%, #0f1438 100%)`;
 
-            // Update audio source
-            audioPlayer.src = track.file;
-        }
+    // TAMBAHAN: Update album cover dengan gambar
+    if (track.cover) {
+        albumArt.style.backgroundImage = `url('${track.cover}')`;
+        albumArt.style.backgroundSize = 'cover';
+        albumArt.style.backgroundPosition = 'center';
+    } else {
+        // Fallback ke gradient jika tidak ada gambar
+        albumArt.style.backgroundImage = `linear-gradient(135deg, ${track.color} 0%, ${adjustColor(track.color, -20)} 100%)`;
+    }
+
+    // Update audio source
+    audioPlayer.src = track.file;
+}
+
+// TAMBAHAN: Fungsi helper untuk adjust warna (untuk fallback)
+function adjustColor(color, amount) {
+    const clamp = (num) => Math.min(Math.max(num, 0), 255);
+    const num = parseInt(color.replace('#', ''), 16);
+    const r = clamp((num >> 16) + amount);
+    const g = clamp(((num >> 8) & 0x00FF) + amount);
+    const b = clamp((num & 0x0000FF) + amount);
+    return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+}
 
         function playCurrentTrack() {
             const track = tracks[currentCategory][currentTrackIndex];
