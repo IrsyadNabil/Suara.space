@@ -30,7 +30,6 @@ $user_name = $_SESSION['user_name'] ?? '';
             background: linear-gradient(#000000 100%);
         }
 
-        /* Header Navigation - UPDATED */
         .header {
             display: flex;
             justify-content: space-between;
@@ -284,7 +283,6 @@ $user_name = $_SESSION['user_name'] ?? '';
             }
         }
 
-        /* UPDATED: Style untuk gambar hero */
         .hero-image {
             width: 100%;
             height: 100%;
@@ -303,7 +301,6 @@ $user_name = $_SESSION['user_name'] ?? '';
             }
         }
 
-        /* Fallback jika gambar tidak ditemukan - tetap tampilkan ilustrasi CSS */
         .person {
             position: relative;
             z-index: 2;
@@ -434,7 +431,6 @@ $user_name = $_SESSION['user_name'] ?? '';
     <div class="container">
         <div class="bg-gradient"></div>
 
-        <!-- NAVBAR UPDATED -->
         <header class="header">
             <a href="index.php" class="logo">
                 <div class="logo-icon">S</div>
@@ -463,7 +459,6 @@ $user_name = $_SESSION['user_name'] ?? '';
             <div class="hero-content">
                 <h1>Music made for <span class="highlight"><span class="text-rotate" id="rotatingText">Creativity</span></span></h1>
                 <p>The only music app made with modes for different activities in your life.</p>
-                <!-- UBAH LINK INI -->
                 <a href="<?php echo $is_logged_in ? 'menu_lagu.php' : 'sign_up.php'; ?>" class="cta-btn">
                     try Suara.Space now
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
@@ -475,8 +470,6 @@ $user_name = $_SESSION['user_name'] ?? '';
             <div class="hero-visual">
                 <div class="person-illustration">
                     <div class="glow"></div>
-                    <!-- PERUBAHAN UTAMA: Ganti ilustrasi CSS dengan gambar -->
-                    <!-- Jika gambar tidak ada, akan fallback ke ilustrasi CSS di bawah -->
                     <img src="index.png" alt="Person with headphones" class="hero-image" 
                          onerror="this.style.display='none'; document.querySelector('.person').style.display='block';">
                     
@@ -538,7 +531,7 @@ $user_name = $_SESSION['user_name'] ?? '';
     </div>
 
     <script>
-        // Rotating text animation
+        
         const words = ['Creativity', 'Motivation', 'Deep Learning', 'Study'];
         let currentIndex = 0;
         const rotatingText = document.getElementById('rotatingText');
@@ -557,7 +550,6 @@ $user_name = $_SESSION['user_name'] ?? '';
 
         setInterval(rotateText, 1500);
 
-        // Category click handler
         const categories = document.querySelectorAll('.category');
 
         categories.forEach(cat => {
@@ -567,13 +559,11 @@ $user_name = $_SESSION['user_name'] ?? '';
             });
         });
 
-        // Mobile menu toggle
         function toggleMobileMenu() {
             const navLinks = document.getElementById('navLinks');
             navLinks.classList.toggle('active');
         }
 
-        // Header background on scroll
         window.addEventListener('scroll', () => {
             const header = document.querySelector('.header');
             if (window.scrollY > 50) {
@@ -583,7 +573,6 @@ $user_name = $_SESSION['user_name'] ?? '';
             }
         });
 
-        // Close mobile menu when clicking outside
         document.addEventListener('click', (e) => {
             const navLinks = document.getElementById('navLinks');
             if (!e.target.closest('.header')) {
@@ -591,7 +580,6 @@ $user_name = $_SESSION['user_name'] ?? '';
             }
         });
 
-        // Close mobile menu when clicking a link
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 document.getElementById('navLinks').classList.remove('active');
