@@ -357,17 +357,6 @@ $user_name = $_SESSION['user_name'] ?? '';
             white-space: nowrap;
         }
 
-        .category:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .category.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.3);
-        }
 
         .icon {
             width: 18px;
@@ -464,7 +453,6 @@ $user_name = $_SESSION['user_name'] ?? '';
                     </div>
                     <span>Hi, <?php echo htmlspecialchars($user_name); ?></span>
                 </div>
-                <a href="menu_lagu.php" class="btn-app">OPEN APP</a>
             <?php else: ?>
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
                 <a href="sign_in.php" class="btn-app">SIGN IN</a>
